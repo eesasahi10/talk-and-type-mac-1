@@ -1,0 +1,30 @@
+name: Build Mac App
+
+on: [push, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.13'
+
+    - name: Install Libraries
+      run: |
+        pip install customtkinter requests pynput pyinstaller
+
+    - name: Build Standalone Mac Executable
+      run: |
+        pyinstaller --noconsole --onefile receiver_mac.py
+
+    - name: Upload Finished App Package
+      uses: actions/upload-artifact@v3
+      with:
+        name: TalkAndType-Mac
+        path: dist/
